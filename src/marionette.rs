@@ -275,7 +275,13 @@ impl MarionetteHandler {
         self.current_log_level = options.log.level.clone().or(self.settings.log_level.clone());
         logging::init(&self.current_log_level);
 
-        let port = self.settings.port.unwrap_or(try!(get_free_port()));
+        let mut port;
+        if options.marionette_port.is_some() {
+            port = self.settings.port.unwrap_or(options.marionette_port.unwrap() as u16);
+        } else {
+            port = try!(get_free_port());
+        }
+
         if !self.settings.connect_existing {
             try!(self.start_browser(port, options));
         }

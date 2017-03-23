@@ -23,7 +23,8 @@ pub struct FirefoxOptions {
     pub profile: Option<Profile>,
     pub args: Option<Vec<String>>,
     pub log: LogOptions,
-    pub prefs: Vec<(String, Pref)>
+    pub prefs: Vec<(String, Pref)>,
+    pub marionette_port: Option<u64>
 }
 
 impl FirefoxOptions {
@@ -39,6 +40,7 @@ impl FirefoxOptions {
             let args = try!(FirefoxOptions::load_args(&firefox_options));
             let log = try!(FirefoxOptions::load_log(&firefox_options));
             let prefs = try!(FirefoxOptions::load_prefs(&firefox_options));
+            let marionette_port = try!(FirefoxOptions::load_marionette_port(&firefox_options));
 
             Ok(FirefoxOptions {
                 binary: binary,
@@ -46,6 +48,7 @@ impl FirefoxOptions {
                 args: args,
                 log: log,
                 prefs: prefs,
+                marionette_port: marionette_port,
             })
         } else {
             Ok(Default::default())
@@ -59,6 +62,18 @@ impl FirefoxOptions {
                                        .ok_or(WebDriverError::new(
                                            ErrorStatus::InvalidArgument,
                                            "'binary' capability was not a string"))))))
+        } else {
+            Ok(None)
+        }
+    }
+
+    fn load_marionette_port(options: &BTreeMap<String, Json>) -> WebDriverResult<Option<u64>> {
+        if let Some(mPort) = options.get("marionettePort") {
+            Ok(Some((try!(mPort
+                           .as_u64()
+                           .ok_or(WebDriverError::new(
+                               ErrorStatus::InvalidArgument,
+                               "'marionettePort' capability was not an integer"))))))
         } else {
             Ok(None)
         }
