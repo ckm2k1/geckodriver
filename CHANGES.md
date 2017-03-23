@@ -2,6 +2,11 @@
 
 All notable changes to this program is documented in this file.
 
+## 0.15.1 (2017-03-23)
+
+### Changed
+- Marionette port defaults to 2828 instead of picking a random free port.
+
 ## 0.15.0 (2017-03-08)
 
 ### Added

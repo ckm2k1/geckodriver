@@ -85,5 +85,5 @@ deploy:
     - "geckodriver-$TRAVIS_TAG-$NAME.$EXT"
   on:
     tags: true
-    repo: mozilla/geckodriver
+    repo: ckm2k1/geckodriver
     condition: -n "$NAME"
